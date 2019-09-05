@@ -39,7 +39,7 @@ import ScrollCom from '@components/scroll.vue'
 import Loading from '@components/loading/loading.vue'
 import { getRecommend,getDiscList } from '@/service/api/recommend.js'
 import { ERR_OK } from '@/service/api/config.js'
-import { setTimeout } from 'timers';
+
 export default {
   name: 'Recommend',
   components: {

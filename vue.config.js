@@ -21,10 +21,24 @@ module.exports = {
         before(app){
             apiRoutes.get('/getDiscList',(req,res)=>{
                 const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg';
-                console.log(req)
                 axios.get(url,{
                     headers: {
                         referer: 'https://y.qq.com/portal/playlist.html',
+                        host: 'y.qq.com'
+                    },
+                    params: req.query
+                }).then((response)=>{
+                    res.json(response.data)
+                }).catch((e)=>{
+                    console.log(e)
+                })
+            })
+
+            apiRoutes.get('/getSingerList',(req,res)=>{
+                const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
+                axios.get(url,{
+                    headers: {
+                        referer: 'https://y.qq.com/portal/singer_list.html',
                         host: 'y.qq.com'
                     },
                     params: req.query
