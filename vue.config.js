@@ -33,21 +33,6 @@ module.exports = {
                     console.log(e)
                 })
             })
-
-            apiRoutes.get('/getSingerList',(req,res)=>{
-                const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
-                axios.get(url,{
-                    headers: {
-                        referer: 'https://y.qq.com/portal/singer_list.html',
-                        host: 'y.qq.com'
-                    },
-                    params: req.query
-                }).then((response)=>{
-                    res.json(response.data)
-                }).catch((e)=>{
-                    console.log(e)
-                })
-            })
             
             app.use("/api",apiRoutes)
         }
