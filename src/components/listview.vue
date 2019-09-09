@@ -50,7 +50,7 @@ export default {
     methods: {
         onShortcutTouchStart (e) {
             // console.log(e.target)
-            let anchorIndex = getData(e.target,"index")
+            let anchorIndex = getData(e.target,'index')
             let firstTouch = e.touches[0]
             this.touch.y1 = firstTouch.pageY
             this.touch.anchorIndex = anchorIndex
@@ -61,10 +61,10 @@ export default {
            this.touch.y2 = firstTouch.pageY
            //向下取整
            let delta =  (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
-           let anchorIndex = this.touch.anchorIndex + delta
+           let anchorIndex = parseInt(this.touch.anchorIndex) + delta
            this._scrollTo(anchorIndex)
         },
-        _scrollTo (index) {
+        _scrollTo (anchorIndex) {
             this.$refs.listview.scrollToElement(this.$refs.listGroup[anchorIndex],0)
         }
     },
