@@ -1,6 +1,7 @@
 <template>
     <div class="singer">
-        <ListView :data="singers"></ListView>
+        <ListView :data="singers" @select="selectSinger"></ListView>
+        <router-view></router-view>
     </div>
 </template>
 
@@ -9,6 +10,7 @@ import { getSingerList } from '@/service/api/singer.js'
 import { ERR_OK } from '@/service/api/config.js'
 import singer from '@/utils/singerInfo.js'
 import ListView from '@components/listview.vue'
+import { mapMutations } from 'vuex'
 
 const HOT_SINGER_LEN = 10
 const HOT_NAME = '热门'
@@ -27,6 +29,12 @@ export default {
         this._getSingerList()
     },
     methods: {
+        selectSinger (singer) {
+            this.$router.push({
+                path: `/singer/${singer.id}`
+            })
+            this.setSinger(singer)
+        },
         _getSingerList () {
             getSingerList().then((res)=>{
                 if(res.code === ERR_OK){
@@ -77,7 +85,10 @@ export default {
            })
            //将所有的ret值合并为一个数组
            return hot.concat(ret)
-       } 
+       },
+       ...mapMutations({
+           setSinger: 'SET_SINGER'
+       }) 
     }
 }
 </script>
