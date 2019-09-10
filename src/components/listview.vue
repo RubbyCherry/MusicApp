@@ -25,6 +25,12 @@
                 </li>
             </ul>
         </div>
+        <div class="list-fixed" v-show="fixedTitle" ref="fixed">
+            <h1 class="fixed-title">{{fixedTitle}}</h1>
+        </div>
+        <div class="loading-container" v-show="!data.length">
+            <Loading></Loading>
+        </div>
     </ScrollCom>
 </template>
 
@@ -32,8 +38,10 @@
 import ScrollCom from './scroll.vue'
 import { getData } from '@/utils/dom.js'
 import { setTimeout } from 'timers';
+import Loading from '@components/loading/loading'
 
 const ANCHOR_HEIGHT = 18
+const TITLE_HEIGHT = 30
 
 export default {
     name: 'ListView',
@@ -46,22 +54,30 @@ export default {
     data () {
         return{
             scrollY: -1,
-            currentIndex: 0
+            currentIndex: 0,
+            diff: -1
         }
     },
     components: {
-        ScrollCom
+        ScrollCom,
+        Loading
     },
     computed: {
         shortcutList () {
             return this.data.map((group)=>{
                 return group.title.substr(0,1)
             })
+        },
+        fixedTitle () {
+            if(this.scrollY > 0){
+                return ''
+            }
+            return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
         }
     },
     methods: {
         onShortcutTouchStart (e) {
-            console.log(e)
+            // console.log(e)
             let anchorIndex = getData(e.target,'index')
             let firstTouch = e.touches[0]
             this.touch.y1 = firstTouch.pageY
@@ -81,7 +97,7 @@ export default {
             this.scrollY = pos.y
         },
         _scrollTo (anchorIndex) { 
-            console.log( this.listHeight)
+            // console.log( this.listHeight)
 
             //解决"热门"上面和"Z"下面的空白处点击为null的情况         
             if(!anchorIndex && anchorIndex !==0){
@@ -126,11 +142,22 @@ export default {
                 let height2 = listHeight[i+1]
                 if(-newY >= height1 && -newY < height2){
                     this.currentIndex = i
+                    this.diff = height2 + newY
                     return
                 }
             }
             //当滚动到底部，且-newY大于最后一个元素的上限
             this.currentIndex = listHeight.length - 2
+        },
+        diff (newVal) {
+            let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal-TITLE_HEIGHT : 0
+            // console.log(this.fixedTop)
+            // console.log("a" + newVal)
+            if(this.fixedTop === fixedTop){
+                return
+            }
+            this.fixedTop = fixedTop
+            this.$refs.fixed.style.transform = `translate3d(0,${fixedTop}px,0)`
         }
     },
     created () {
